@@ -474,7 +474,7 @@ svg.圖示{width:1.1em;height:1.1em;flex:none;fill:none;stroke:currentColor;stro
 /* 右欄：進度吊牌在上，宇成的評語銘板沉在下 */
 #試衣右欄{flex:1;min-width:0;display:flex;flex-direction:column;gap:24px}   /* 名牌凸出 15px，間距要蓋得過它 */
 #評語{padding:24px 15px 14px;min-width:0;margin-top:auto}
-#評語 .名牌{left:14px}
+#評語 .名牌{left:22px}   /* 26-10-05 她點修：14px 會壓到漆板鉚釘圈（inset 9px），改回通用 22px 同迎賓板 */
 #評語 .詞{font-size:15px;line-height:1.75;max-height:calc(1.75em * 6);overflow-y:auto}
 #訂製 .籤{margin-top:18px;padding:9px 6px 5px;min-width:0;flex:1 1 0;max-width:76px;white-space:nowrap;font-size:13px;letter-spacing:.12em;text-indent:.12em;transform-origin:50% -18px}   /* 26-10-05 她說修：393 窄幕右欄塞不下三張固定寬吊牌，「細節」被右緣切——改成均分可縮＋字距收窄保一行 */
 #訂製 .籤::before{top:-18px;height:23px}
