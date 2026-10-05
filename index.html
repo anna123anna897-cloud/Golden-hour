@@ -651,8 +651,9 @@ svg.圖示{width:1.1em;height:1.1em;flex:none;fill:none;stroke:currentColor;stro
 #成品對話板{width:100%;padding:30px 24px 20px;cursor:pointer;min-height:156px}
 #成品對話板 .詞{font-size:17px;line-height:1.85;min-height:3.7em}
 /* 回上一句（26-10-05 她點單：按太快漏聽沒法回去）：左下小鈕，第二句起亮，點它不觸發整板前進 */
-#成品對話板 .提示列{display:flex;align-items:center;justify-content:space-between;gap:12px}
-#成品對話板 .提示列 .提示{flex:1 1 auto}
+#成品對話板 .提示列{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#成品對話板 .提示列 .提示{flex:1 1 auto;flex-wrap:wrap;font-size:13px;letter-spacing:.03em}   /* 字距收窄＝（n/N）在手機寬也擠得進同一行 */
+#成品對話板 .提示 .不拆{white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
 .回句鈕{
   flex:none;font-family:var(--明體);font-size:13px;letter-spacing:.08em;color:var(--黃銅字);
   background:none;border:1px solid var(--黃銅暗);border-radius:14px;
@@ -1236,7 +1237,7 @@ function 重新訂製(){   /* 成品頁「再訂一套」 */
    講完停在最後一句（不循環）。某句留空字串 '' ＝跳過那句。 */
 const 成品台詞 = {   /* ''＝還空著（播放時自動跳過），等薄荷填；進度表「台詞總覽」會盯 */
   開場: [
-    '你看，這就是你替我挑選，穿上後的樣子。',
+    '今天謝謝你來。你看，這就是你替我挑選的衣服，穿上後的樣子。',
   ],
   色: {
     深藍:   '恩，果然還是藍色最適合我。',
@@ -1256,7 +1257,7 @@ const 成品台詞 = {   /* ''＝還空著（播放時自動跳過），等薄�
     灰披肩:   '選了披肩的你品味果然不錯。',
   },   /* 口袋巾、胸花的成品感想 26-10-05 她拍板不寫——這兩件在成品頁不說話（播放器本來就跳過沒有的鍵） */
   收尾: [
-    '來，牽起我的手，我們去約會吧。',
+    '今年你也陪在我身邊，像是做夢一樣。來，牽起我的手，我們去約會吧。',
   ],
 };
 
@@ -1476,8 +1477,17 @@ function 顯示成品句(){
   const 完 = 成品句位 >= 成品句單.length-1;
   提.classList.toggle('呼吸', !完);
   提.innerHTML = '';
-  提.append(完 ? '——他說完了，笑著看妳。' : `點一下，聽他繼續說（${成品句位+1}/${成品句單.length}）`);
-  if(!完){ 提.insertAdjacentHTML('beforeend', '<svg class="圖示"><use href="#i-箭"/></svg>'); }
+  if(完){
+    提.append('——他說完了，笑著看妳。');
+  }else{
+    /* 26-10-05 她點單：（n/N）不准自己斷到下一行——尾段（含箭頭）包成不拆單元，要折只折在逗號後 */
+    提.append('點一下，');
+    const 尾 = document.createElement('span');
+    尾.className = '不拆';
+    尾.textContent = `聽他繼續說（${成品句位+1}/${成品句單.length}）`;
+    尾.insertAdjacentHTML('beforeend', '<svg class="圖示"><use href="#i-箭"/></svg>');
+    提.append(尾);
+  }
   取('成品回鈕').classList.toggle('可回', 成品句位 > 0);
   取('成品對話板').style.cursor = 完 ? 'default' : 'pointer';
 }
