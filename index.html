@@ -670,7 +670,7 @@ svg.圖示{width:1.1em;height:1.1em;flex:none;fill:none;stroke:currentColor;stro
   background:radial-gradient(ellipse 80% 65% at 50% 40%, #e6d6b4 0%, #c9b28a 50%, #8e7550 100%);
   box-shadow:inset 0 0 0 1px rgba(42,24,8,.45), inset 0 0 26px rgba(42,24,8,.45);
 }
-#紙娃娃區 canvas{width:100%;height:auto;aspect-ratio:2/3;display:block}
+#紙娃娃區 canvas{width:min(100%, 242px);height:auto;aspect-ratio:2/3;display:block;margin:0 auto}   /* 26-10-05 她二修：背板對齊話框、娃本人維持原尺寸（242＝舊展台 270 扣內距），別放大 */
 #紙娃娃區 .台座{
   height:30px;margin:0 -12px;border-radius:3px;position:relative;
   background:var(--木紋);
