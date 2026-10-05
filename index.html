@@ -650,9 +650,20 @@ svg.圖示{width:1.1em;height:1.1em;flex:none;fill:none;stroke:currentColor;stro
 /* ② 成品對話板 */
 #成品對話板{width:100%;padding:30px 24px 20px;cursor:pointer;min-height:156px}
 #成品對話板 .詞{font-size:17px;line-height:1.85;min-height:3.7em}
+/* 回上一句（26-10-05 她點單：按太快漏聽沒法回去）：左下小鈕，第二句起亮，點它不觸發整板前進 */
+#成品對話板 .提示列{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#成品對話板 .提示列 .提示{flex:1 1 auto}
+.回句鈕{
+  flex:none;font-family:var(--明體);font-size:13px;letter-spacing:.08em;color:var(--黃銅字);
+  background:none;border:1px solid var(--黃銅暗);border-radius:14px;
+  padding:5px 12px;margin-top:12px;cursor:pointer;visibility:hidden;
+}
+.回句鈕.可回{visibility:visible}
+@media (hover:hover){ .回句鈕:hover{color:var(--黃銅亮);border-color:var(--黃銅)} }
+.回句鈕:active{transform:translateY(1px)}
 
 /* ③ 展示台：暖光背板＋胡桃木台座 */
-#紙娃娃區 .展台{width:min(72vw, 270px);display:flex;flex-direction:column;align-items:stretch}
+#紙娃娃區 .展台{width:100%;display:flex;flex-direction:column;align-items:stretch}   /* 26-10-05 她點單：展台拉到跟上面話框同一條邊線（原 min(72vw,270px)）；訂製單小票保留原寬原歪 */
 #紙娃娃區 .背板{
   padding:14px 14px 0;border-radius:10px 10px 0 0;
   background:radial-gradient(ellipse 80% 65% at 50% 40%, #e6d6b4 0%, #c9b28a 50%, #8e7550 100%);
@@ -861,10 +872,14 @@ svg.圖示{width:1.1em;height:1.1em;flex:none;fill:none;stroke:currentColor;stro
     <!-- ② 宇成的話：點一下換下一句 -->
     <div class="成品塊" id="評語區">
       <div id="成品對話板" class="漆板" role="button" tabindex="0" aria-live="polite"
-           onclick="成品下一句()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();成品下一句()}">
+           onclick="成品下一句()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();成品下一句()}else if(event.key==='ArrowLeft'){event.preventDefault();成品上一句()}">
         <div class="名牌">宇成</div>
         <div class="詞" id="成品詞"></div>
-        <div class="提示 呼吸" id="成品提示"></div>
+        <div class="提示列">
+          <button class="回句鈕" id="成品回鈕" type="button" aria-label="回上一句"
+                  onclick="成品上一句(event)" onkeydown="event.stopPropagation()">‹ 上一句</button>
+          <div class="提示 呼吸" id="成品提示"></div>
+        </div>
       </div>
     </div>
 
@@ -1447,6 +1462,12 @@ function 成品下一句(){
   成品句位++;
   顯示成品句();
 }
+function 成品上一句(e){   /* 26-10-05 她點單：按太快可以回頭。說完之後也能回去重聽，再點板子照常往前 */
+  if(e) e.stopPropagation();   /* 鈕在板子裡，別讓這一下又觸發「下一句」 */
+  if(成品句位 <= 0) return;
+  成品句位--;
+  顯示成品句();
+}
 function 顯示成品句(){
   const 字 = 取('成品詞');
   字.textContent = 成品句單[成品句位] || '';
@@ -1457,6 +1478,7 @@ function 顯示成品句(){
   提.innerHTML = '';
   提.append(完 ? '——他說完了，笑著看妳。' : `點一下，聽他繼續說（${成品句位+1}/${成品句單.length}）`);
   if(!完){ 提.insertAdjacentHTML('beforeend', '<svg class="圖示"><use href="#i-箭"/></svg>'); }
+  取('成品回鈕').classList.toggle('可回', 成品句位 > 0);
   取('成品對話板').style.cursor = 完 ? 'default' : 'pointer';
 }
 
